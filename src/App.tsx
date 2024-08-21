@@ -7,9 +7,19 @@ import { UsersList } from './components/UserList'
 function App() {
   const [users, setUsers] = useState<User[]>([])
   const [showColors, setShowColors] = useState(false)
+  const [sortByCountry, setSortByCountry]= useState(false)
 
   const toggleColors = () => {
     setShowColors(!showColors)
+  }
+
+  const toogleSortByCountry = () => {
+    setSortByCountry(prevState => !prevState)
+  }
+
+  const handleDelete = (email: string) => {
+    const filteredUsers = users.filter((user) => user.email !== email)
+    setUsers(filteredUsers)
   }
 
   useEffect(() => {
@@ -22,17 +32,28 @@ function App() {
     })
   }, [])
 
+  const sortedUsers = sortByCountry
+  ? [...users].sort((a,b) => {
+    return a.location.country.localeCompare(b.location.country)
+  })
+  : users
+
+  console.log({sortByCountry})
+  
   return (
    <div className="App">
-    <h1>Prueba técnica</h1>
+    <h1>Avilabe Users</h1>
     {/*JSON.stringify(users)*/}
     <header>
       <button onClick={toggleColors}>
          Colorear filas
       </button>
+      <button onClick={toogleSortByCountry}>
+        {sortByCountry ? 'No ordenar pais' : 'ordenar pais'}
+      </button>
     </header>
     <main>
-      <UsersList showColors={showColors} users={users}/>
+      <UsersList deleteUser={handleDelete} showColors={showColors} users={sortedUsers}/>
     </main>
    </div>
   )
