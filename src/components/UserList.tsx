@@ -1,27 +1,28 @@
-import { type User } from "../types"
+import { SortBy, type User } from "../types.d"
 
 interface Props {
+    changeSorting : (sort : SortBy) => void
     deleteUser: (email: string) => void
     showColors: boolean
     users: User[]
 }
 
-export function UsersList({deleteUser, showColors, users} : Props){
+export function UsersList({ changeSorting, deleteUser, showColors, users} : Props){
     return(
         <table width='100%'>
             <thead>
                 <tr>
                     <th>Foto</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Pais</th>
+                    <th onClick={() => {changeSorting(SortBy.NAME)}}>Nombre</th>
+                    <th onClick={() => {changeSorting(SortBy.LAST)}}>Apellido</th>
+                    <th onClick={() => {changeSorting(SortBy.COUNTRY)}}>Pais</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
                 {
                     users.map((user, index) => {
-                        const backgroundColor = index % 2 === 0 ? '#333' : '#555'
+                        const backgroundColor = index % 2 === 0 ? '#6e7571' : '#555'
                         const color= showColors ? backgroundColor: 'transparent'
                       //  console.log("  " + index);
 
@@ -39,12 +40,12 @@ export function UsersList({deleteUser, showColors, users} : Props){
                                 <td>
                                     {user.location.country}
                                 </td>
-                                <td>
+                                <td> 
                                   <button
                                    onClick={() => {
                                     deleteUser(user.email)
                                    }}
-                                  >Button</button>
+                                  >Borrar</button>
                                 </td>
                             </tr>
                         )
